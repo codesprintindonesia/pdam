@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manajemen Data Pelanggan PDAM Kolaka - Bank Sultra</title>
+  <style>
+    :root {
+      --primary-color: #0b2556;
+      --secondary-color: #c79e18;
+      --light-color: #f5f5f5;
+      --dark-color: #333;
+      --gray-color: #f0f2f5;
+      --border-color: #ddd;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --info-color: #17a2b8;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--gray-color);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: var(--primary-color);
+      color: white;
+      z-index: 1000;
+      transition: all 0.3s;
+      overflow-y: auto;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-logo {
+      width: 160px;
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+    
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .menu-item.active {
+      background-color: var(--secondary-color);
+      color: white;
+      border-left: 4px solid white;
+    }
+    
+    .menu-icon {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .menu-label {
+      flex: 1;
+    }
+    
+    .sidebar-footer {
+      padding: 15px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      font-size: 12px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+    
+    .nav-left h1 {
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+    
+    .breadcrumb {
+      font-size: 14px;
+      color: #777;
+      margin-top: 5px;
+    }
+    
+    .breadcrumb a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      background-color: var(--gray-color);
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-right: 10px;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .username {
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    /* Content Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Search and Filter */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .search-container {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      padding: 8px 15px;
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .search-input {
+      border: none;
+      flex: 1;
+      padding: 8px;
+      font-size: 15px;
+    }
+    
+    .search-input:focus {
+      outline: none;
+    }
+    
+    .search-icon {
+      color: #777;
+      margin-right: 8px;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #0a1e42;
+    }
+    
+    .btn-outline {
+      border: 1px solid var(--border-color);
+      background-color: transparent;
+      color: var(--dark-color);
+    }
+    
+    .btn-outline:hover {
+      background-color: var(--gray-color);
+    }
+    
+    .btn-icon {
+      margin-right: 8px;
+    }
+    
+    .filter-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-group {
+      display: flex;
+      align-items: center;
+    }
+    
+    .filter-label {
+      margin-right: 8px;
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .filter-select {
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      font-size: 14px;
+    }
+    
+    /* Table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .data-table th,
+    .data-table td {
+      border: 1px solid var(--border-color);
+      padding: 12px 15px;
+      text-align: left;
+    }
+    
+    .data-table th {
+      background-color: var(--gray-color);
+      color: var(--dark-color);
+      font-weight: 600;
+    }
+    
+    .data-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    .data-table tr:hover {
+      background-color: rgba(11, 37, 86, 0.05);
+    }
+    
+    .data-table .status {
+      font-size: 13px;
+      padding: 5px 10px;
+      border-radius: 30px;
+      display: inline-block;
+      font-weight: 500;
+    }
+    
+    .status-active {
+      background-color: rgba(40, 167, 69, 0.15);
+      color: var(--success-color);
+    }
+    
+    .status-inactive {
+      background-color: rgba(220, 53, 69, 0.15);
+      color: var(--danger-color);
+    }
+    
+    .table-actions {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      color: #555;
+      transition: all 0.2s;
+    }
+    
+    .action-btn:hover {
+      background-color: var(--gray-color);
+    }
+    
+    .action-edit:hover {
+      color: var(--primary-color);
+    }
+    
+    .action-delete:hover {
+      color: var(--danger-color);
+    }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .pagination-info {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .pagination-controls {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .page-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+    
+    .page-btn:hover {
+      background-color: var(--gray-color);
+      border-color: #bbb;
+    }
+    
+    .page-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    /* Modal */
+    .modal-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    
+    .modal {
+      background-color: white;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: 20px;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: #777;
+    }
+    
+    .modal-body {
+      padding: 20px;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark-color);
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(11, 37, 86, 0.1);
+    }
+    
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    /* Responsiveness */
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 200px;
+      }
+      
+      .main-content {
+        margin-left: 200px;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 900;
+      }
+      
+      .toolbar {
+        flex-direction: column;
+      }
+      
+      .actions {
+        width: 100%;
+      }
+      
+      .filter-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .filter-group {
+        width: 100%;
+      }
+      
+      .filter-select {
+        width: 100%;
+      }
+      
+      .data-table {
+        font-size: 14px;
+      }
+      
+      .data-table th,
+      .data-table td {
+        padding: 10px;
+      }
+      
+      .action-btn {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <img src="/api/placeholder/160/60" alt="Bank Sultra Logo" class="sidebar-logo">
+      <small>Sistem Informasi Pembayaran PDAM Kolaka</small>
+    </div>
+    
+    <div class="sidebar-menu">
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📊</span>
+        <span class="menu-label">Dashboard</span>
+      </a>
+      
+      <a href="#" class="menu-item active">
+        <span class="menu-icon">👥</span>
+        <span class="menu-label">Data Pelanggan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📝</span>
+        <span class="menu-label">Pencatatan Meter</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📃</span>
+        <span class="menu-label">Tagihan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">💳</span>
+        <span class="menu-label">Integrasi Bank</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📈</span>
+        <span class="menu-label">Laporan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">⚙️</span>
+        <span class="menu-label">Pengaturan</span>
+      </a>
+    </div>
+    
+    <div class="sidebar-footer">
+      <p>Bank Sultra & PDAM Kolaka</p>
+      <p>v1.0.0</p>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="nav-left">
+        <h1>Manajemen Data Pelanggan PDAM Kolaka</h1>
+        <div class="breadcrumb">
+          <a href="#">Dashboard</a> &raquo; Data Pelanggan
+        </div>
+      </div>
+      
+      <div class="nav-right">
+        <div class="user-profile">
+          <div class="avatar">AS</div>
+          <div class="username">Admin PDAM</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Daftar Pelanggan</div>
+      </div>
+      
+      <div class="card-body">
+        <!-- Search and Actions -->
+        <div class="toolbar">
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="Cari pelanggan (ID, nama, alamat)">
+          </div>
+          
+          <div class="actions">
+            <button class="btn btn-outline">
+              <span class="btn-icon">🔄</span>Refresh
+            </button>
+            <button class="btn btn-outline">
+              <span class="btn-icon">⬇️</span>Export
+            </button>
+            <button class="btn btn-primary">
+              <span class="btn-icon">➕</span>Tambah Pelanggan
+            </button>
+          </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filter-container">
+          <div class="filter-group">
+            <span class="filter-label">Kecamatan:</span>
+            <select class="filter-select">
+              <option value="">Semua Kecamatan</option>
+              <option value="kolaka">Kolaka</option>
+              <option value="latambaga">Latambaga</option>
+              <option value="wundulako">Wundulako</option>
+              <option value="pomalaa">Pomalaa</option>
+              <option value="watubangga">Watubangga</option>
+              <option value="samaturu">Samaturu</option>
+              <option value="wolo">Wolo</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <span class="filter-label">Kelurahan:</span>
+            <select class="filter-select">
+              <option value="">Semua Kelurahan</option>
+              <option value="lamokato">Lamokato</option>
+              <option value="watuliandu">Watuliandu</option>
+              <option value="laloeha">Laloeha</option>
+              <option value="tahoa">Tahoa</option>
+              <option value="tawang">Tawang</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <span class="filter-label">Kategori Tarif:</span>
+            <select class="filter-select">
+              <option value="">Semua Kategori</option>
+              <option value="rumah-tangga">Rumah Tangga</option>
+              <option value="komersial">Komersial</option>
+              <option value="industri">Industri</option>
+              <option value="sosial">Sosial</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <span class="filter-label">Status:</span>
+            <select class="filter-select">
+              <option value="">Semua Status</option>
+              <option value="active">Aktif</option>
+              <option value="inactive">Tidak Aktif</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Table -->
+        <div style="overflow-x: auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID Pelanggan</th>
+                <th>Nama</th>
+                <th>Alamat</th>
+                <th>Kecamatan</th>
+                <th>Kelurahan</th>
+                <th>No. Meter</th>
+                <th>Kategori Tarif</th>
+                <th>Tgl Registrasi</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>PDM-001242</td>
+                <td>Andi Saputra</td>
+                <td>Jl. Anggrek No. 15</td>
+                <td>Samaturu</td>
+                <td>Sabilambo</td>
+                <td>Lamokato</td>
+                <td>MT-78452</td>
+                <td>Rumah Tangga</td>
+                <td>12/03/2023</td>
+                <td><span class="status status-active">Aktif</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="action-btn action-edit">📝</button>
+                    <button class="action-btn">👁️</button>
+                    <button class="action-btn action-delete">❌</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>PDM-001243</td>
+                <td>PT Sultra Makmur</td>
+                <td>Jl. Industri Blok C-5</td>
+                <td>Pomalaa</td>
+                <td>Hakatutobu</td>
+                <td>MT-85124</td>
+                <td>Komersial</td>
+                <td>05/08/2023</td>
+                <td><span class="status status-active">Aktif</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="action-btn action-edit">📝</button>
+                    <button class="action-btn">👁️</button>
+                    <button class="action-btn action-delete">❌</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>PDM-001244</td>
+                <td>Budi Santoso</td>
+                <td>Jl. Melati No. 27</td>
+                <td>Latambaga</td>
+                <td>Watuliandu</td>
+                <td>MT-78453</td>
+                <td>Rumah Tangga</td>
+                <td>18/09/2023</td>
+                <td><span class="status status-active">Aktif</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="action-btn action-edit">📝</button>
+                    <button class="action-btn">👁️</button>
+                    <button class="action-btn action-delete">❌</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>PDM-001245</td>
+                <td>Siti Rahayu</td>
+                <td>Jl. Cakalang No. 5</td>
+                <td>Wundulako</td>
+                <td>Laloeha</td>
+                <td>MT-78623</td>
+                <td>Rumah Tangga</td>
+                <td>22/10/2023</td>
+                <td><span class="status status-inactive">Tidak Aktif</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="action-btn action-edit">📝</button>
+                    <button class="action-btn">👁️</button>
+                    <button class="action-btn action-delete">❌</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>PDM-001246</td>
+                <td>Puskesmas Kolaka</td>
+                <td>Jl. Kesehatan No. 10</td>
+                <td>Kolaka</td>
+                <td>MT-79142</td>
+                <td>Sosial</td>
+                <td>08/11/2023</td>
+                <td><span class="status status-active">Aktif</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="action-btn action-edit">📝</button>
+                    <button class="action-btn">👁️</button>
+                    <button class="action-btn action-delete">❌</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>PDM-001247</td>
+                <td>Hotel Pantai Indah</td>
+                <td>Jl. Pantai No. 8</td>
+                <td>Watubangga</td>
+                <td>Tikonu</td>
+                <td>MT-85236</td>
+                <td>Komersial</td>
+                <td>15/12/2023</td>
+                <td><span class="status status-active">Aktif</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="action-btn action-edit">📝</button>
+                    <button class="action-btn">👁️</button>
+                    <button class="action-btn action-delete">❌</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>PDM-001248</td>
+                <td>PT Sultra Manufacturing</td>
+                <td>Jl. Industri Blok A-3</td>
+                <td>Wolo</td>
+                <td>Kowioha</td>
+                <td>MT-78751</td>
+                <td>Industri</td>
+                <td>07/01/2024</td>
+                <td><span class="status status-active">Aktif</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="action-btn action-edit">📝</button>
+                    <button class="action-btn">👁️</button>
+                    <button class="action-btn action-delete">❌</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination">
+          <div class="pagination-info">
+            Menampilkan 1-7 dari 128 pelanggan
+          </div>
+          
+          <div class="pagination-controls">
+            <button class="page-btn">«</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">...</button>
+            <button class="page-btn">18</button>
+            <button class="page-btn">»</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal (Hidden by default, shown with JavaScript) -->
+  <div class="modal-container" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Tambah Pelanggan</div>
+        <button class="close-btn">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <form>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">ID Pelanggan</label>
+              <input type="text" class="form-control" placeholder="Otomatis" disabled>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Nomor Meter</label>
+              <input type="text" class="form-control" placeholder="Masukkan nomor meter">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Nama Pelanggan*</label>
+              <input type="text" class="form-control" placeholder="Masukkan nama pelanggan" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">NIK*</label>
+              <input type="text" class="form-control" placeholder="Masukkan NIK" required>
+            </div>
+            
+            <div class="form-group full-width">
+              <label class="form-label">Alamat*</label>
+              <input type="text" class="form-control" placeholder="Masukkan alamat" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Kecamatan*</label>
+              <select class="form-control" required>
+                <option value="">Pilih Kecamatan</option>
+                <option value="kolaka">Kolaka</option>
+                <option value="latambaga">Latambaga</option>
+                <option value="wundulako">Wundulako</option>
+                <option value="pomalaa">Pomalaa</option>
+                <option value="watubangga">Watubangga</option>
+                <option value="samaturu">Samaturu</option>
+                <option value="wolo">Wolo</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Kelurahan*</label>
+              <select class="form-control" required>
+                <option value="">Pilih Kelurahan</option>
+                <option value="lamokato">Lamokato</option>
+                <option value="watuliandu">Watuliandu</option>
+                <option value="laloeha">Laloeha</option>
+                <option value="hakatutobu">Hakatutobu</option>
+                <option value="tikonu">Tikonu</option>
+                <option value="sabilambo">Sabilambo</option>
+                <option value="kowioha">Kowioha</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Kategori Tarif*</label>
+              <select class="form-control" required>
+                <option value="">Pilih Kategori</option>
+                <option value="rumah-tangga">Rumah Tangga</option>
+                <option value="komersial">Komersial</option>
+                <option value="industri">Industri</option>
+                <option value="sosial">Sosial</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Email

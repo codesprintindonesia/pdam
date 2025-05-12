@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pencatatan Meter - PDAM Kolaka</title>
+  <style>
+    :root {
+      --primary-color: #0b2556;
+      --secondary-color: #c79e18;
+      --light-color: #f5f5f5;
+      --dark-color: #333;
+      --gray-color: #f0f2f5;
+      --border-color: #ddd;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --info-color: #17a2b8;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--gray-color);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: var(--primary-color);
+      color: white;
+      z-index: 1000;
+      transition: all 0.3s;
+      overflow-y: auto;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-logo {
+      width: 160px;
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+    
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .menu-item.active {
+      background-color: var(--secondary-color);
+      color: white;
+      border-left: 4px solid white;
+    }
+    
+    .menu-icon {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .menu-label {
+      flex: 1;
+    }
+    
+    .sidebar-footer {
+      padding: 15px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      font-size: 12px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+      transition: all 0.3s;
+    }
+    
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+    
+    .nav-left h1 {
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+    
+    .breadcrumb {
+      font-size: 14px;
+      color: #777;
+      margin-top: 5px;
+    }
+    
+    .breadcrumb a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .nav-right {
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      background-color: var(--gray-color);
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-right: 10px;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    .username {
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Dashboard Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .grid-item {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .grid-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 24px;
+    }
+    
+    .grid-icon.primary {
+      background-color: rgba(11, 37, 86, 0.1);
+      color: var(--primary-color);
+    }
+    
+    .grid-icon.success {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+    
+    .grid-icon.warning {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+    }
+    
+    .grid-info {
+      flex: 1;
+    }
+    
+    .grid-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dark-color);
+      margin-bottom: 5px;
+    }
+    
+    .grid-label {
+      font-size: 14px;
+      color: #777;
+    }
+    
+    /* Form Layouts */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark-color);
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 15px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(11, 37, 86, 0.1);
+    }
+    
+    /* Search Box */
+    .search-container {
+      display: flex;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    
+    .search-input {
+      flex: 1;
+      padding: 12px 15px;
+      border: none;
+      font-size: 15px;
+    }
+    
+    .search-input:focus {
+      outline: none;
+    }
+    
+    .search-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0 20px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .search-btn:hover {
+      background-color: #0a1e42;
+    }
+    
+    /* Customer Info Panel */
+    .customer-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      background-color: rgba(11, 37, 86, 0.05);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .customer-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      background-color: #ddd;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      font-size: 30px;
+    }
+    
+    .customer-details {
+      flex: 1;
+    }
+    
+    .customer-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    .customer-id {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .info-label {
+      font-size: 12px;
+      color: #777;
+    }
+    
+    .info-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    /* Meter Reading Form */
+    .meter-reading-form {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .meter-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      background-color: rgba(11, 37, 86, 0.05);
+      padding: 15px;
+      border-radius: 8px;
+    }
+    
+    .meter-item {
+      text-align: center;
+    }
+    
+    .meter-label {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 5px;
+    }
+    
+    .meter-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .meter-value.primary {
+      color: var(--primary-color);
+    }
+    
+    .meter-value.warning {
+      color: var(--warning-color);
+    }
+    
+    .meter-value.success {
+      color: var(--success-color);
+    }
+    
+    .reading-input-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .reading-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark-color);
+      margin-bottom: 10px;
+    }
+    
+    .reading-input {
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: 600;
+      border: 2px solid var(--primary-color);
+      border-radius: 8px;
+    }
+    
+    .reading-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(11, 37, 86, 0.2);
+    }
+    
+    .calculation-result {
+      background-color: var(--gray-color);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .calculation-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--dark-color);
+      margin-bottom: 10px;
+    }
+    
+    .calculation-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    
+    .calculation-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border-color);
+    }
+    
+    .calculation-label {
+      font-size: 14px;
+      color: #777;
+    }
+    
+    .calculation-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    .calculation-total {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary-color);
+      text-align: right;
+      padding-top: 15px;
+    }
+    
+    .photo-upload-container {
+      border: 2px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    
+    .photo-upload-container:hover {
+      border-color: var(--primary-color);
+    }
+    
+    .upload-icon {
+      font-size: 30px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+    
+    .upload-text {
+      color: #777;
+      margin-bottom: 10px;
+    }
+    
+    .upload-btn {
+      display: inline-block;
+      padding: 8px 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+    }
+    
+    .btn {
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #0a1e42;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--dark-color);
+    }
+    
+    .btn-outline:hover {
+      background-color: var(--gray-color);
+    }
+    
+    .btn-warning {
+      background-color: var(--warning-color);
+      color: white;
+    }
+    
+    .btn-warning:hover {
+      background-color: #e0a800;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 200px;
+      }
+      
+      .main-content {
+        margin-left: 200px;
+      }
+      
+      .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+      
+      .calculation-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 900;
+      }
+      
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .customer-photo {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .meter-info {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .meter-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <img src="/api/placeholder/160/60" alt="Bank Sultra Logo" class="sidebar-logo">
+      <small>Sistem Informasi Pembayaran PDAM Kolaka</small>
+    </div>
+    
+    <div class="sidebar-menu">
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📊</span>
+        <span class="menu-label">Dashboard</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">👥</span>
+        <span class="menu-label">Data Pelanggan</span>
+      </a>
+      
+      <a href="#" class="menu-item active">
+        <span class="menu-icon">📝</span>
+        <span class="menu-label">Pencatatan Meter</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📃</span>
+        <span class="menu-label">Tagihan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">💳</span>
+        <span class="menu-label">Integrasi Bank</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📈</span>
+        <span class="menu-label">Laporan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">⚙️</span>
+        <span class="menu-label">Pengaturan</span>
+      </a>
+    </div>
+    
+    <div class="sidebar-footer">
+      <p>Bank Sultra & PDAM Kolaka</p>
+      <p>v1.0.0</p>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="nav-left">
+        <h1>Pencatatan Meter</h1>
+        <div class="breadcrumb">
+          <a href="#">Dashboard</a> &raquo; Pencatatan Meter
+        </div>
+      </div>
+      
+      <div class="nav-right">
+        <div class="user-profile">
+          <div class="avatar">PP</div>
+          <div class="username">Petugas Pencatat</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Dashboard Cards -->
+    <div class="dashboard-grid">
+      <div class="grid-item">
+        <div class="grid-icon primary">📝</div>
+        <div class="grid-info">
+          <div class="grid-value">127</div>
+          <div class="grid-label">Pencatatan Hari Ini</div>
+        </div>
+      </div>
+      
+      <div class="grid-item">
+        <div class="grid-icon success">✅</div>
+        <div class="grid-info">
+          <div class="grid-value">1,234</div>
+          <div class="grid-label">Target Bulan Ini</div>
+        </div>
+      </div>
+      
+      <div class="grid-item">
+        <div class="grid-icon warning">⏱️</div>
+        <div class="grid-info">
+          <div class="grid-value">78%</div>
+          <div class="grid-label">Progres Pencatatan</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Search Box -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Cari Pelanggan</div>
+      </div>
+      
+      <div class="card-body">
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="Masukkan ID Pelanggan atau scan barcode">
+          <button class="search-btn">Cari</button>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Pencarian Lanjutan</label>
+            <select class="form-control">
+              <option value="">Pilih Kecamatan</option>
+              <option value="kolaka">Kolaka</option>
+              <option value="latambaga">Latambaga</option>
+              <option value="wundulako">Wundulako</option>
+              <option value="pomalaa">Pomalaa</option>
+              <option value="watubangga">Watubangga</option>
+              <option value="samaturu">Samaturu</option>
+              <option value="wolo">Wolo</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">&nbsp;</label>
+            <select class="form-control">
+              <option value="">Pilih Kelurahan</option>
+              <option value="lamokato">Lamokato</option>
+              <option value="watuliandu">Watuliandu</option>
+              <option value="laloeha">Laloeha</option>
+              <option value="hakatutobu">Hakatutobu</option>
+              <option value="tikonu">Tikonu</option>
+              <option value="sabilambo">Sabilambo</option>
+              <option value="kowioha">Kowioha</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Customer Info -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Data Pelanggan</div>
+      </div>
+      
+      <div class="card-body">
+        <div class="customer-info">
+          <div class="customer-photo">👤</div>
+          
+          <div class="customer-details">
+            <div class="customer-name">Andi Saputra</div>
+            <div class="customer-id">ID: PDM-001242</div>
+            
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">No. Meter</span>
+                <span class="info-value">MT-78452</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="info-label">Kategori Tarif</span>
+                <span class="info-value">Rumah Tangga</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="info-label">Alamat</span>
+                <span class="info-value">Jl. Anggrek No. 15, Lamokato</span>
+              </div>
+              
+              <div class="info-item">
+                <span class="info-label">Kecamatan</span>
+                <span class="info-value">Kolaka</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Meter Reading Form -->
+        <div class="meter-reading-form">
+          <div class="meter-info">
+            <div class="meter-item">
+              <div class="meter-label">Angka Meter Terakhir</div>
+              <div class="meter-value primary">00245</div>
+            </div>
+            
+            <div class="meter-item">
+              <div class="meter-label">Tanggal Pencatatan Terakhir</div>
+              <div class="meter-value">10/04/2025</div>
+            </div>
+            
+            <div class="meter-item">
+              <div class="meter-label">Rata-rata Pemakaian (m³)</div>
+              <div class="meter-value">12.5 m³</div>
+            </div>
+            
+            <div class="meter-item">
+              <div class="meter-label">Status</div>
+              <div class="meter-value success">Aktif</div>
+            </div>
+          </div>
+          
+          <div class="reading-input-container">
+            <div class="reading-label">Masukkan Angka Meter Saat Ini (m³)</div>
+            <input type="number" class="reading-input" value="00258">
+          </div>
+          
+          <div class="calculation-result">
+            <div class="calculation-title">Perhitungan Sementara (Belum Final)</div>
+            
+            <div class="calculation-grid">
+              <div class="calculation-item">
+                <div class="calculation-label">Angka Meter Terakhir</div>
+                <div class="calculation-value">245 m³</div>
+              </div>
+              
+              <div class="calculation-item">
+                <div class="calculation-label">Angka Meter Saat Ini</div>
+                <div class="calculation-value">258 m³</div>
+              </div>
+              
+              <div class="calculation-item">
+                <div class="calculation-label">Total Pemakaian</div>
+                <div class="calculation-value">13 m³</div>
+              </div>
+              
+              <div class="calculation-item">
+                <div class="calculation-label">Tarif Dasar</div>
+                <div class="calculation-value">Rp 5.000/m³</div>
+              </div>
+              
+              <div class="calculation-item">
+                <div class="calculation-label">Biaya Air</div>
+                <div class="calculation-value">Rp 65.000</div>
+              </div>
+              
+              <div class="calculation-item">
+                <div class="calculation-label">Biaya Pemeliharaan</div>
+                <div class="calculation-value">Rp 10.000</div>
+              </div>
+              
+              <div class="calculation-item">
+                <div class="calculation-label">Biaya Administrasi</div>
+                <div class="calculation-value">Rp 5.000</div>
+              </div>
+            </div>
+            
+            <div class="calculation-total">Perkiraan Tagihan: Rp 80.000 <span style="font-size: 12px; font-weight: normal; color: #777;">(Menunggu verifikasi)</span></div>
+          </div>
+          
+          <div class="photo-upload-container">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Unggah foto meter air untuk verifikasi</div>
+            <div class="upload-btn">Pilih Foto</div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Catatan Tambahan</label>
+            <textarea class="form-control" rows="3" placeholder="Tambahkan catatan jika diperlukan"></textarea>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="btn btn-outline">Batalkan</button>
+            <button class="btn btn-warning">Simpan Draft</button>
+            <button class="btn btn-primary">Simpan & Tunggu Verifikasi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
