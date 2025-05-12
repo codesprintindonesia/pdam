@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan Sistem - PDAM Kolaka</title>
+  <style>
+    :root {
+      --primary-color: #0b2556;
+      --secondary-color: #c79e18;
+      --light-color: #f5f5f5;
+      --dark-color: #333;
+      --gray-color: #f0f2f5;
+      --border-color: #ddd;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --info-color: #17a2b8;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--gray-color);
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background-color: var(--primary-color);
+      color: white;
+      z-index: 1000;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-logo {
+      width: 160px;
+      margin-bottom: 10px;
+    }
+    
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+    
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+    }
+    
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .menu-item.active {
+      background-color: var(--secondary-color);
+      color: white;
+      border-left: 4px solid white;
+    }
+    
+    .menu-icon {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .menu-label {
+      flex: 1;
+    }
+    
+    .sidebar-footer {
+      padding: 15px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      font-size: 12px;
+      text-align: center;
+    }
+    
+    /* Main Content */
+    .main-content {
+      margin-left: 250px;
+      padding: 20px;
+    }
+    
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+    
+    .nav-left h1 {
+      font-size: 24px;
+      color: var(--primary-color);
+    }
+    
+    .breadcrumb {
+      font-size: 14px;
+      color: #777;
+      margin-top: 5px;
+    }
+    
+    .breadcrumb a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+    }
+    
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-right: 10px;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .card-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    /* Tabs */
+    .tabs-container {
+      margin-bottom: 20px;
+    }
+    
+    .tabs-header {
+      display: flex;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+    
+    .tab-item {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      font-weight: 500;
+      color: #777;
+    }
+    
+    .tab-item:hover {
+      color: var(--primary-color);
+    }
+    
+    .tab-item.active {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+    
+    /* Table */
+    .table-responsive {
+      overflow-x: auto;
+    }
+    
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .data-table th,
+    .data-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .data-table th {
+      background-color: var(--gray-color);
+      color: var(--dark-color);
+      font-weight: 600;
+    }
+    
+    .data-table tr:hover {
+      background-color: rgba(11, 37, 86, 0.05);
+    }
+    
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .badge-success {
+      background-color: rgba(40, 167, 69, 0.15);
+      color: var(--success-color);
+    }
+    
+    .badge-warning {
+      background-color: rgba(255, 193, 7, 0.15);
+      color: var(--warning-color);
+    }
+    
+    .badge-danger {
+      background-color: rgba(220, 53, 69, 0.15);
+      color: var(--danger-color);
+    }
+    
+    .badge-info {
+      background-color: rgba(23, 162, 184, 0.15);
+      color: var(--info-color);
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .btn-icon {
+      margin-right: 8px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--dark-color);
+    }
+    
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark-color);
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .pagination-info {
+      color: #777;
+      font-size: 14px;
+    }
+    
+    .pagination-controls {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .page-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: white;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .page-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 0;
+        transform: translateX(-100%);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .tabs-header {
+        overflow-x: auto;
+        white-space: nowrap;
+        flex-wrap: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <img src="/api/placeholder/160/60" alt="Bank Sultra Logo" class="sidebar-logo">
+      <small>Sistem Informasi Pembayaran PDAM Kolaka</small>
+    </div>
+    
+    <div class="sidebar-menu">
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📊</span>
+        <span class="menu-label">Dashboard</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">👥</span>
+        <span class="menu-label">Data Pelanggan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📝</span>
+        <span class="menu-label">Pencatatan Meter</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">✅</span>
+        <span class="menu-label">Verifikasi Pencatatan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📃</span>
+        <span class="menu-label">Penetapan Tagihan</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">💳</span>
+        <span class="menu-label">Monitoring Pembayaran</span>
+      </a>
+      
+      <a href="#" class="menu-item">
+        <span class="menu-icon">📈</span>
+        <span class="menu-label">Laporan & Statistik</span>
+      </a>
+      
+      <a href="#" class="menu-item active">
+        <span class="menu-icon">⚙️</span>
+        <span class="menu-label">Pengaturan</span>
+      </a>
+    </div>
+    
+    <div class="sidebar-footer">
+      <p>Bank Sultra & PDAM Kolaka</p>
+      <p>v1.0.0</p>
+    </div>
+  </div>
+  
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="nav-left">
+        <h1>Pengaturan Sistem</h1>
+        <div class="breadcrumb">
+          <a href="#">Dashboard</a> &raquo; Pengaturan Sistem
+        </div>
+      </div>
+      
+      <div class="nav-right">
+        <div class="user-profile">
+          <div class="avatar">AS</div>
+          <div class="username">Admin Super</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Tabs Navigation -->
+    <div class="tabs-container">
+      <div class="tabs-header">
+        <div class="tab-item active">Manajemen Pengguna</div>
+        <div class="tab-item">Parameter Sistem</div>
+        <div class="tab-item">Backup Database</div>
+        <div class="tab-item">Log Aktivitas</div>
+      </div>
+    </div>
+    
+    <!-- Manajemen Pengguna Tab -->
+    <div class="tab-content">
+      <!-- Daftar Pengguna Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Daftar Pengguna</div>
+          <button class="btn btn-primary">
+            <span class="btn-icon">+</span>Tambah Pengguna
+          </button>
+        </div>
+        
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Peran</th>
+                  <th>Status</th>
+                  <th>Login Terakhir</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Admin Super</td>
+                  <td>adminsuper</td>
+                  <td>admin@pdam-kolaka.co.id</td>
+                  <td><span class="badge badge-info">Admin Super</span></td>
+                  <td><span class="badge badge-success">Aktif</span></td>
+                  <td>12/05/2025 08:45</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Budi Santoso</td>
+                  <td>budis</td>
+                  <td>budi@pdam-kolaka.co.id</td>
+                  <td><span class="badge badge-info">Admin PDAM</span></td>
+                  <td><span class="badge badge-success">Aktif</span></td>
+                  <td>11/05/2025 16:22</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dewi Lestari</td>
+                  <td>dewil</td>
+                  <td>dewi@pdam-kolaka.co.id</td>
+                  <td><span class="badge badge-warning">Petugas Pencatat</span></td>
+                  <td><span class="badge badge-success">Aktif</span></td>
+                  <td>12/05/2025 09:13</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Agung Pratama</td>
+                  <td>agungp</td>
+                  <td>agung@pdam-kolaka.co.id</td>
+                  <td><span class="badge badge-warning">Petugas Pencatat</span></td>
+                  <td><span class="badge badge-success">Aktif</span></td>
+                  <td>11/05/2025 15:40</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Bambang Kusumo</td>
+                  <td>bambangk</td>
+                  <td>bambang@pdam-kolaka.co.id</td>
+                  <td><span class="badge badge-success">Manajer</span></td>
+                  <td><span class="badge badge-success">Aktif</span></td>
+                  <td>10/05/2025 11:20</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination">
+            <div class="pagination-info">
+              Menampilkan 1-5 dari 7 pengguna
+            </div>
+            <div class="pagination-controls">
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Peran dan Akses Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Peran dan Hak Akses</div>
+        </div>
+        
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Peran</th>
+                  <th>Data Pelanggan</th>
+                  <th>Pencatatan</th>
+                  <th>Verifikasi</th>
+                  <th>Tagihan</th>
+                  <th>Pembayaran</th>
+                  <th>Laporan</th>
+                  <th>Pengaturan</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-info">Admin Super</span></td>
+                  <td>Penuh</td>
+                  <td>Penuh</td>
+                  <td>Penuh</td>
+                  <td>Penuh</td>
+                  <td>Penuh</td>
+                  <td>Penuh</td>
+                  <td>Penuh</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-info">Admin PDAM</span></td>
+                  <td>Penuh</td>
+                  <td>Baca</td>
+                  <td>Verifikasi</td>
+                  <td>Penuh</td>
+                  <td>Baca</td>
+                  <td>Baca</td>
+                  <td>Tidak Ada</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-warning">Petugas Pencatat</span></td>
+                  <td>Baca</td>
+                  <td>Penuh</td>
+                  <td>Tidak Ada</td>
+                  <td>Tidak Ada</td>
+                  <td>Tidak Ada</td>
+                  <td>Tidak Ada</td>
+                  <td>Tidak Ada</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-success">Manajer</span></td>
+                  <td>Baca</td>
+                  <td>Baca</td>
+                  <td>Baca</td>
+                  <td>Baca</td>
+                  <td>Baca</td>
+                  <td>Penuh</td>
+                  <td>Tidak Ada</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Parameter Sistem Tab (Hidden by default) -->
+    <div class="tab-content" style="display: none;">
+      <!-- Tarif dan Biaya Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Struktur Tarif dan Biaya</div>
+        </div>
+        
+        <div class="card-body">
+          <!-- Kategori Rumah Tangga -->
+          <div style="margin-bottom: 25px;">
+            <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--primary-color);">Kategori Rumah Tangga</h3>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Rentang Pemakaian</th>
+                    <th>Tarif per m³</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>0-10 m³</td>
+                    <td>Rp 5,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>11-20 m³</td>
+                    <td>Rp 6,500</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>> 20 m³</td>
+                    <td>Rp 8,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Kategori Komersial -->
+          <div style="margin-bottom: 25px;">
+            <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--primary-color);">Kategori Komersial</h3>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Rentang Pemakaian</th>
+                    <th>Tarif per m³</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>0-10 m³</td>
+                    <td>Rp 7,500</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>> 10 m³</td>
+                    <td>Rp 9,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Kategori Industri -->
+          <div style="margin-bottom: 25px;">
+            <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--primary-color);">Kategori Industri</h3>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Rentang Pemakaian</th>
+                    <th>Tarif per m³</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>0-50 m³</td>
+                    <td>Rp 10,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>> 50 m³</td>
+                    <td>Rp 12,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Biaya Administrasi dan Pemeliharaan -->
+          <div>
+            <h3 style="font-size: 16px; margin-bottom: 15px; color: var(--primary-color);">Biaya Administrasi dan Pemeliharaan</h3>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Jenis Biaya</th>
+                    <th>Jumlah</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Biaya Administrasi</td>
+                    <td>Rp 5,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Biaya Pemeliharaan Rumah Tangga</td>
+                    <td>Rp 10,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Biaya Pemeliharaan Komersial</td>
+                    <td>Rp 15,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Biaya Pemeliharaan Industri</td>
+                    <td>Rp 25,000</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm">✏️</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="btn btn-outline">Reset ke Default</button>
+            <button class="btn btn-primary">Simpan Perubahan</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pengaturan Umum Sistem -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Pengaturan Umum Sistem</div>
+        </div>
+        
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 40%;">Parameter</th>
+                  <th style="width: 30%;">Nilai</th>
+                  <th style="width: 30%;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div style="font-weight: 500;">Periode Pelaporan Default</div>
+                    <div style="font-size: 13px; color: #777;">Periode waktu default untuk laporan</div>
+                  </td>
+                  <td>Bulanan</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight: 500;">Batas Anomali Pemakaian (%)</div>
+                    <div style="font-size: 13px; color: #777;">Persentase perubahan pemakaian yang dianggap anomali</div>
+                  </td>
+                  <td>30%</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight: 500;">Jumlah Percobaan Login Maksimal</div>
+                    <div style="font-size: 13px; color: #777;">Jumlah maksimal percobaan login sebelum akun dikunci</div>
+                  </td>
+                  <td>5</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight: 500;">Durasi Sesi Login (menit)</div>
+                    <div style="font-size: 13px; color: #777;">Durasi maksimum sesi login sebelum harus login ulang</div>
+                  </td>
+                  <td>60</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight: 500;">Mode Pemeliharaan</div>
+                    <div style="font-size: 13px; color: #777;">Menonaktifkan akses ke sistem kecuali untuk admin</div>
+                  </td>
+                  <td><span class="badge badge-danger">Tidak Aktif</span></td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">✏️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="btn btn-outline">Reset ke Default</button>
+            <button class="btn btn-primary">Simpan Perubahan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Backup Database Tab (Hidden by default) -->
+    <div class="tab-content" style="display: none;">
+      <!-- Status Backup Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Status Backup Database</div>
+          <button class="btn btn-primary">
+            <span class="btn-icon">💾</span>Backup Sekarang
+          </button>
+        </div>
+        
+        <div class="card-body">
+          <div style="background-color: rgba(40, 167, 69, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 20px;">
+            <div style="font-weight: 600; margin-bottom: 8px; color: #28a745;">Backup Terjadwal Aktif</div>
+            <p style="margin: 0; color: #555;">
+              Backup database otomatis terjadwal berjalan normal. Backup terakhir berhasil: 12/05/2025 00:15
+            </p>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Nilai</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Status Backup Terakhir</td>
+                  <td><span class="badge badge-success">Berhasil</span></td>
+                </tr>
+                <tr>
+                  <td>Ukuran Database</td>
+                  <td>3.45 GB</td>
+                </tr>
+                <tr>
+                  <td>Ukuran Backup Terakhir</td>
+                  <td>842 MB</td>
+                </tr>
+                <tr>
+                  <td>Durasi Backup Terakhir</td>
+                  <td>7 menit 23 detik</td>
+                </tr>
+                <tr>
+                  <td>Jumlah Backup Tersimpan</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Jadwal Backup Otomatis</td>
+                  <td>Harian (00:15)</td>
+                </tr>
+                <tr>
+                  <td>Lokasi Penyimpanan</td>
+                  <td>Lokal & Cloud</td>
+                </tr>
+                <tr>
+                  <td>Retensi Backup</td>
+                  <td>30 hari</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Riwayat Backup Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Riwayat Backup</div>
+        </div>
+        
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID Backup</th>
+                  <th>Tanggal & Waktu</th>
+                  <th>Jenis</th>
+                  <th>Ukuran</th>
+                  <th>Durasi</th>
+                  <th>Status</th>
+                  <th>Penyimpanan</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BKP-20250512-0015</td>
+                  <td>12/05/2025 00:15</td>
+                  <td>Otomatis</td>
+                  <td>842 MB</td>
+                  <td>7m 23s</td>
+                  <td><span class="badge badge-success">Berhasil</span></td>
+                  <td>Lokal & Cloud</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">📥</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>BKP-20250511-0015</td>
+                  <td>11/05/2025 00:15</td>
+                  <td>Otomatis</td>
+                  <td>839 MB</td>
+                  <td>7m 15s</td>
+                  <td><span class="badge badge-success">Berhasil</span></td>
+                  <td>Lokal & Cloud</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">📥</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>BKP-20250510-1432</td>
+                  <td>10/05/2025 14:32</td>
+                  <td>Manual</td>
+                  <td>835 MB</td>
+                  <td>7m 05s</td>
+                  <td><span class="badge badge-success">Berhasil</span></td>
+                  <td>Lokal & Cloud</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">📥</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>BKP-20250510-0015</td>
+                  <td>10/05/2025 00:15</td>
+                  <td>Otomatis</td>
+                  <td>833 MB</td>
+                  <td>8m 22s</td>
+                  <td><span class="badge badge-success">Berhasil</span></td>
+                  <td>Lokal & Cloud</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">📥</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>BKP-20250509-0015</td>
+                  <td>09/05/2025 00:15</td>
+                  <td>Otomatis</td>
+                  <td>830 MB</td>
+                  <td>7m 18s</td>
+                  <td><span class="badge badge-danger">Gagal</span></td>
+                  <td>Lokal</td>
+                  <td>
+                    <button class="btn btn-outline btn-sm">📥</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination">
+            <div class="pagination-info">
+              Menampilkan 1-5 dari 30 backup
+            </div>
+            <div class="pagination-controls">
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn">...</button>
+              <button class="page-btn">6</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Log Aktivitas Tab (Hidden by default) -->
+    <div class="tab-content" style="display: none;">
+      <!-- Log Aktivitas Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Log Aktivitas Pengguna</div>
+          <button class="btn btn-outline">
+            <span class="btn-icon">📥</span>Ekspor Log
+          </button>
+        </div>
+        
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tanggal & Waktu</th>
+                  <th>Pengguna</th>
+                  <th>Modul</th>
+                  <th>Aktivitas</th>
+                  <th>Deskripsi</th>
+                  <th>IP Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>12/05/2025 10:35:42</td>
+                  <td>Admin Super</td>
+                  <td>Pengaturan</td>
+                  <td>Akses</td>
+                  <td>Mengakses halaman pengaturan sistem</td>
+                  <td>192.168.1.24</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 10:15:18</td>
+                  <td>Budi Santoso</td>
+                  <td>Tagihan</td>
+                  <td>Ubah Data</td>
+                  <td>Mengubah status tagihan ID: INV-2505005</td>
+                  <td>192.168.1.35</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 10:12:03</td>
+                  <td>Dewi Lestari</td>
+                  <td>Pencatatan Meter</td>
+                  <td>Tambah Data</td>
+                  <td>Menambahkan pencatatan meter baru ID: MTR-25050008</td>
+                  <td>192.168.1.42</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 10:01:22</td>
+                  <td>Siti Rahayu</td>
+                  <td>Data Pelanggan</td>
+                  <td>Lihat Data</td>
+                  <td>Melihat data pelanggan ID: PDM-001248</td>
+                  <td>192.168.1.38</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 09:55:15</td>
+                  <td>Agung Pratama</td>
+                  <td>Pembayaran</td>
+                  <td>Lihat Data</td>
+                  <td>Melihat status pembayaran ID: TRX-1267890</td>
+                  <td>192.168.1.41</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 09:45:30</td>
+                  <td>Bambang Kusumo</td>
+                  <td>Laporan</td>
+                  <td>Ekspor Data</td>
+                  <td>Mengekspor laporan pendapatan bulanan</td>
+                  <td>192.168.1.28</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 09:36:12</td>
+                  <td>Admin Super</td>
+                  <td>Manajemen Pengguna</td>
+                  <td>Ubah Data</td>
+                  <td>Mengubah hak akses pengguna: Budi Santoso</td>
+                  <td>192.168.1.24</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 09:25:48</td>
+                  <td>Budi Santoso</td>
+                  <td>Verifikasi</td>
+                  <td>Ubah Data</td>
+                  <td>Verifikasi pencatatan meter ID: MTR-25050002</td>
+                  <td>192.168.1.35</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 09:13:22</td>
+                  <td>Dewi Lestari</td>
+                  <td>Otentikasi</td>
+                  <td>Login</td>
+                  <td>Login berhasil</td>
+                  <td>192.168.1.42</td>
+                </tr>
+                <tr>
+                  <td>12/05/2025 08:45:10</td>
+                  <td>Admin Super</td>
+                  <td>Otentikasi</td>
+                  <td>Login</td>
+                  <td>Login berhasil</td>
+                  <td>192.168.1.24</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination">
+            <div class="pagination-info">
+              Menampilkan 1-10 dari 2,345 log aktivitas
+            </div>
+            <div class="pagination-controls">
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn">...</button>
+              <button class="page-btn">235</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Peringatan Keamanan Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Peringatan Keamanan</div>
+        </div>
+        
+        <div class="card-body">
+          <div style="margin-bottom: 15px; background-color: rgba(220, 53, 69, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+            <div style="font-weight: 600; margin-bottom: 8px; color: #dc3545;">Percobaan Login Gagal Berulang</div>
+            <p style="margin: 0; color: #555;">5 percobaan login gagal untuk pengguna 'budis' dari IP 103.45.67.89 pada 11/05/2025 22:45:12</p>
+          </div>
+          
+          <div style="margin-bottom: 15px; background-color: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+            <div style="font-weight: 600; margin-bottom: 8px; color: #ffc107;">Akses dari Lokasi Tidak Biasa</div>
+            <p style="margin: 0; color: #555;">Pengguna 'antonw' login dari lokasi geografis tidak biasa (Jakarta) pada 10/05/2025 15:38:24</p>
+          </div>
+          
+          <div style="background-color: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+            <div style="font-weight: 600; margin-bottom: 8px; color: #ffc107;">Aktivitas Tidak Biasa</div>
+            <p style="margin: 0; color: #555;">Pengguna 'sitir' mengakses modul Pengaturan yang di luar peran normalnya pada 09/05/2025 16:22:45</p>
+          </div>
+        </div>
+      </div>
+    </div>
